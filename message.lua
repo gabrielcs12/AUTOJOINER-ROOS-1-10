@@ -1,25 +1,26 @@
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ScriptersCorpAutoUI"
+ScreenGui.Name = "AutoJoinUI"
 ScreenGui.Parent = game:GetService("CoreGui")
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 300, 0, 180)
-MainFrame.Position = UDim2.new(0.5, -150, 0.4, -90)
-MainFrame.BackgroundColor3 = Color3.fromRGB(45, 55, 80) -- cor mais moderna
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.4, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(60, 0, 90) -- Roxo
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.CornerRadius = UDim.new(0, 10)
 MainCorner.Parent = MainFrame
 
+-- Título principal
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 40)
 Title.Position = UDim2.new(0, 0, 0, 0)
-Title.BackgroundColor3 = Color3.fromRGB(60, 70, 110) -- cor do título
-Title.Text = "Scripters Corp Auto"
+Title.BackgroundColor3 = Color3.fromRGB(80, 0, 120) -- Roxo mais escuro
+Title.Text = "ROOS AUTOJOINER 1-10"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -28,9 +29,22 @@ Title.TextYAlignment = Enum.TextYAlignment.Center
 Title.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 12)
+TitleCorner.CornerRadius = UDim.new(0, 10)
 TitleCorner.Parent = Title
 
+-- Subtítulo (Discord)
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(1, -20, 0, 20)
+SubTitle.Position = UDim2.new(0, 10, 0, 45)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "discord.gg/scripterscorporation"
+SubTitle.TextColor3 = Color3.fromRGB(200, 170, 255)
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextSize = 13
+SubTitle.TextXAlignment = Enum.TextXAlignment.Center
+SubTitle.Parent = MainFrame
+
+-- Serviços
 local HttpService = game:GetService("HttpService")
 
 local function formatMoney(num)
@@ -45,6 +59,7 @@ local function parseInput(str)
     return nil
 end
 
+-- HWID para salvar config
 local hwid = "unknown_hwid"
 pcall(function()
     hwid = game:GetService("RbxAnalyticsService"):GetClientId()
@@ -73,13 +88,14 @@ end
 local config = loadConfig()
 local MinMS = config.MinMS or 1000000
 
+-- Botão AutoJoin
 local AutoJoinEnabled = false
 local Toggle = Instance.new("TextButton")
 Toggle.Size = UDim2.new(1, -20, 0, 35)
-Toggle.Position = UDim2.new(0, 10, 0, 50)
-Toggle.BackgroundColor3 = Color3.fromRGB(70, 85, 130) -- cor do botão
+Toggle.Position = UDim2.new(0, 10, 0, 75)
+Toggle.BackgroundColor3 = Color3.fromRGB(100, 0, 160) -- Roxo
 Toggle.Text = "Auto Join: OFF"
-Toggle.TextColor3 = Color3.fromRGB(255, 120, 120)
+Toggle.TextColor3 = Color3.fromRGB(255, 100, 100)
 Toggle.Font = Enum.Font.GothamBold
 Toggle.TextSize = 16
 Toggle.Parent = MainFrame
@@ -87,13 +103,13 @@ Toggle.Parent = MainFrame
 Toggle.MouseButton1Click:Connect(function()
     AutoJoinEnabled = not AutoJoinEnabled
     Toggle.Text = "Auto Join: " .. (AutoJoinEnabled and "ON" or "OFF")
-    Toggle.TextColor3 = AutoJoinEnabled and Color3.fromRGB(120, 255, 120) or Color3.fromRGB(255, 120, 120)
+    Toggle.TextColor3 = AutoJoinEnabled and Color3.fromRGB(100, 255, 100) or Color3.fromRGB(255, 100, 100)
 end)
 
 -- Min Label
 local MinLabel = Instance.new("TextLabel")
 MinLabel.Size = UDim2.new(1, -20, 0, 25)
-MinLabel.Position = UDim2.new(0, 10, 0, 95)
+MinLabel.Position = UDim2.new(0, 10, 0, 115)
 MinLabel.BackgroundTransparency = 1
 MinLabel.Text = "Min M/s: " .. formatMoney(MinMS)
 MinLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -104,8 +120,8 @@ MinLabel.Parent = MainFrame
 -- Min TextBox
 local MinBox = Instance.new("TextBox")
 MinBox.Size = UDim2.new(1, -20, 0, 25)
-MinBox.Position = UDim2.new(0, 10, 0, 120)
-MinBox.BackgroundColor3 = Color3.fromRGB(60, 70, 95) -- cor do input
+MinBox.Position = UDim2.new(0, 10, 0, 145)
+MinBox.BackgroundColor3 = Color3.fromRGB(80, 0, 120) -- Roxo
 MinBox.Text = tostring(MinMS/1000000)
 MinBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 MinBox.Font = Enum.Font.Gotham
@@ -125,6 +141,7 @@ MinBox.FocusLost:Connect(function()
     end
 end)
 
+-- WebSocket
 if not WebSocket then
     warn("Your executor does not support WebSocket.")
     return
